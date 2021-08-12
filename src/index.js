@@ -8,6 +8,9 @@ import BrotherPass from './pages/brotherPass/index'
 import ContextPass from './pages/contextPass/index'
 import LifeCycle from './pages/lifeCycle'
 import PropsVenify from './pages/propsVerify'
+import ReuseCom from './pages/reuseCom'
+import UseWithMouse from './pages/useWithMouse'
+
 import './index.css'
 
 class App extends Component {
@@ -38,6 +41,13 @@ class App extends Component {
 
         {/* props验证 */}
         {/* <PropsVenify colors={['red', 'blue', 'green']}></PropsVenify> */}
+
+        {/* 组件复用--render props */}
+        {/* <ReuseCom></ReuseCom> */}
+
+        {/* 高阶组件的使用 */}
+        <UseWithMouse.MousePosition></UseWithMouse.MousePosition>
+        <UseWithMouse.MouseCat></UseWithMouse.MouseCat>
       </div>
       
     )
