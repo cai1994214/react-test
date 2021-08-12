@@ -1,0 +1,15 @@
+.child1{
+    background: fuchsia;
+    width: 500px;
+    height: 500px;
+}
+.child2{
+    background: aqua;
+    width: 400px;
+    height: 400px;
+}
+.child3{
+    background: chocolate;
+    width: 300px;
+    height: 300px;
+}

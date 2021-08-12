@@ -1,17 +1,50 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, {Component} from 'react'
+import  ReactDOM from 'react-dom'
+import FormDemo from './pages/fromDemo'
+import PropsDemo from './pages/propsDemo'
+import ComPassValue from './pages/comPassValue'
+import ChildPassValue from './pages/childPassParent/Parent/index'
+import BrotherPass from './pages/brotherPass/index'
+import ContextPass from './pages/contextPass/index'
+import LifeCycle from './pages/lifeCycle'
+import PropsVenify from './pages/propsVerify'
+import './index.css'
+
+class App extends Component {
+
+  render() {
+    return (
+      <div>
+        {/*表单demo*/}
+        {/* <FormDemo ></FormDemo> */}
+
+        {/*props传值*/}
+        {/* <PropsDemo></PropsDemo>  */}
+
+        {/*父传子*/}
+        {/* <ComPassValue></ComPassValue> */}
+        
+        {/*子传父*/}
+        {/* <ChildPassValue></ChildPassValue>  */}
+
+        {/*兄弟传值*/}
+        {/* <BrotherPass /> */}
+
+        {/* 跨组件传值 */}
+        {/* <ContextPass></ContextPass> */}
+
+        {/* 生命周期 */}
+        {/* <LifeCycle></LifeCycle> */}
+
+        {/* props验证 */}
+        {/* <PropsVenify colors={['red', 'blue', 'green']}></PropsVenify> */}
+      </div>
+      
+    )
+  }
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+)
