@@ -46,8 +46,10 @@ class App extends Component {
         {/* <ReuseCom></ReuseCom> */}
 
         {/* 高阶组件的使用 */}
-        <UseWithMouse.MousePosition></UseWithMouse.MousePosition>
-        <UseWithMouse.MouseCat></UseWithMouse.MouseCat>
+        {/* <UseWithMouse.MousePosition></UseWithMouse.MousePosition>
+        <UseWithMouse.MouseCat></UseWithMouse.MouseCat> */}
+
+
       </div>
       
     )
