@@ -2,6 +2,7 @@ import withMouse from "../../components/withMouse.js";
 import img from '../img/cat.jpg'
 
 const Position = props => {
+    console.log(props)
     return (
         <div>
             高阶组件

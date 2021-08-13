@@ -10,6 +10,7 @@ import LifeCycle from './pages/lifeCycle'
 import PropsVenify from './pages/propsVerify'
 import ReuseCom from './pages/reuseCom'
 import UseWithMouse from './pages/useWithMouse'
+import RandomNum from './pages/randomNum'
 
 import './index.css'
 
@@ -46,10 +47,11 @@ class App extends Component {
         {/* <ReuseCom></ReuseCom> */}
 
         {/* 高阶组件的使用 */}
-        {/* <UseWithMouse.MousePosition></UseWithMouse.MousePosition>
+        {/* <UseWithMouse.MousePosition a={1}></UseWithMouse.MousePosition>
         <UseWithMouse.MouseCat></UseWithMouse.MouseCat> */}
 
-
+        {/* 优化渲染 shouldComponentUpdate 案例 随机数 */}
+        <RandomNum></RandomNum>
       </div>
       
     )

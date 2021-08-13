@@ -29,7 +29,7 @@ function withMouse(WrappendComponent){
 
         render() {
             return (
-                <WrappendComponent {...this.state}/>
+                <WrappendComponent {...this.state} {...this.props}/>
             )
         }
     }
