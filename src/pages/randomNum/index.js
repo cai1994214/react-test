@@ -22,13 +22,16 @@ class RandomNum extends Component {
 
     render() {
         // console.log('render');
-        return (
+        const el = (
             <div>
                 {/* <h1>随机数: {this.state.number}</h1> */}
                 <ShowNumber number={this.state.number}></ShowNumber>
-                <button onClick={this.handleClick}>获取随机数</button>
+                <button className="userName" onClick={this.handleClick}>获取随机数</button>
             </div>
-        )
+        ) 
+        // console.log('this', this);
+        console.log(el);
+        return el
     }
 }
 

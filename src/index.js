@@ -11,6 +11,11 @@ import PropsVenify from './pages/propsVerify'
 import ReuseCom from './pages/reuseCom'
 import UseWithMouse from './pages/useWithMouse'
 import RandomNum from './pages/randomNum'
+import Login from './pages/Login'
+
+//Router 包裹整个应用 引入一次
+import { BrowserRouter as Router, Route, Link} from 'react-router-dom'
+// import { HashRouter as Router, Route, Link} from 'react-router-dom';//带#号
 
 import './index.css'
 
@@ -51,12 +56,34 @@ class App extends Component {
         <UseWithMouse.MouseCat></UseWithMouse.MouseCat> */}
 
         {/* 优化渲染 shouldComponentUpdate 案例 随机数 */}
-        <RandomNum></RandomNum>
+        {/* <RandomNum></RandomNum> */}
+
+        {/* 路由  */}
+        {/* <Router>
+          <div>
+            <h1>React路由</h1>
+
+            <div>
+            <Link to="/first" >页面一</Link>
+            <br/>
+            <Link to="/home" >页面一</Link>
+            </div>
+            
+            <Route path="/first" component={First}></Route>
+            <Route path="/home" component={Hemo}></Route>
+          </div>
+        </Router> */}
+
+        {/* 编程式导航 */}
+        <Login></Login>
       </div>
       
     )
   }
 }
+
+// const First = () => <p>页面一的内容</p>
+// const Hemo = () => <p>Home</p>
 
 ReactDOM.render(
   <App />,
