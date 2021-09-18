@@ -11,8 +11,11 @@ import PropsVenify from './pages/propsVerify'
 import ReuseCom from './pages/reuseCom'
 import UseWithMouse from './pages/useWithMouse'
 import RandomNum from './pages/randomNum'
+
+import DemoRedux from './pages/redux'
 import Login from './pages/Login'
 
+import store from './store/index.js'
 //Router 包裹整个应用 引入一次
 import { BrowserRouter as Router, Route, Link} from 'react-router-dom'
 // import { HashRouter as Router, Route, Link} from 'react-router-dom';//带#号
@@ -75,17 +78,28 @@ class App extends Component {
         </Router> */}
 
         {/* 编程式导航 */}
-        <Login></Login>
+        {/* <Login></Login> */}
+
+        {/* redux */}
+        <DemoRedux value={store.getState()}  
+        onIncrement={() => store.dispatch({ type: 'Incremented' , payload : 'sss'})}
+        onDecrement={() => store.dispatch({ type: 'Decremented' })}
+        ></DemoRedux>
       </div>
       
     )
   }
 }
 
+
 // const First = () => <p>页面一的内容</p>
 // const Hemo = () => <p>Home</p>
 
-ReactDOM.render(
+const renders = ()=> ReactDOM.render(
   <App />,
   document.getElementById('root')
 )
+
+renders()
+
+store.subscribe(renders)
