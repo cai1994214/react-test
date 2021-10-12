@@ -1,8 +1,8 @@
 
 import React from 'react'
-import SideMenu from '../../components/sandBox/SideMenu'
+import SideMenu from '../../components/sandBox/sidemenu/SideMenu.js'
 import TopHeader from '../../components/sandBox/TopHeader'
-import { Switch, Route ,Redirect} from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import Home from './home/Home'
 import UserList from './user-manage/UserList'
 import RoleList from './right-manage/RoleList'
@@ -12,18 +12,18 @@ import './NewsSandBox.scss'
 
 import { Layout } from 'antd'
 const { Content } = Layout;
-export default function NewsSandBox() {
+export default function NewsSandBox(props) {
     return (
         <Layout>
             <SideMenu></SideMenu>
             <Layout className="site-layout">
-            <TopHeader></TopHeader>
+                <TopHeader></TopHeader>
                 <Content
                     className="site-layout-background"
                     style={{
-                    margin: '24px 16px',
-                    padding: 24,
-                    minHeight: 280,
+                        margin: '24px 16px',
+                        padding: 24,
+                        minHeight: 280,
                     }}
                 >
                     <Switch>
