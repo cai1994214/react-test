@@ -12,8 +12,8 @@ export default function Home() {
 
         //json server 新增
         // axios.post('http://localhost:8000/posts', {
-        //     title: '新增的',
-        //     author: 'xiaoming'
+        //     title: '新增的数据2313',
+        //     author: 'wangyang5454'
         // }).then(res => {
         //     console.log(res.data)
         // });
