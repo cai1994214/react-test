@@ -58,6 +58,22 @@ export default function RightList() {
 		}
 	};
 
+	function switchMethed(row) {
+		//修改当前行 权限
+		row.pagepermisson = row.pagepermisson === 1 ? 0 : 1; //当前dataSource的值已经改变再次赋值
+		// console.log(dataSource)
+		setDataSource([...dataSource]);
+		if (row.grade === 1) {
+			axios.patch(`http://localhost:8000/rights/${row.id}`, {
+				pagepermisson: row.pagepermisson,
+			});
+		} else {
+			axios.patch(`http://localhost:8000/children/${row.id}`, {
+				pagepermisson: row.pagepermisson,
+			});
+		}
+	}
+
 	const columns = [
 		{
 			title: "ID",
@@ -92,15 +108,18 @@ export default function RightList() {
 					<Popover
 						content={
 							<div style={{ textAlign: "center" }}>
-								<Switch></Switch>
+								<Switch
+									checked={row.pagepermisson}
+									onChange={() => switchMethed(row)}
+								></Switch>
 							</div>
 						}
-						title="Title"
-						trigger={!row.pagepermisson ? "" : "click"}
+						title="展示权限修改"
+						trigger={row.pagepermisson === undefined ? "" : "click"}
 					>
 						<Button
 							type="primary"
-							disabled={!row.pagepermisson}
+							disabled={row.pagepermisson === undefined}
 							shape="circle"
 							icon={<EditOutlined />}
 						/>
@@ -115,6 +134,7 @@ export default function RightList() {
 			<Table
 				dataSource={dataSource}
 				columns={columns}
+				rowKey={(row) => row.id}
 				pagination={{ pageSize: 5 }}
 			/>
 		</div>
