@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef, useState, useEffect, useLayoutEffect } from "react";
 import { Form, Input, Select } from "antd";
 const { Option } = Select;
 const UserForm = (props, ref) => {
@@ -11,8 +11,12 @@ const UserForm = (props, ref) => {
 			});
 		}
 		setIsDisable(value === 1);
-    };   
+	};
 
+	useEffect(() => {
+			setIsDisable(props.disabled);
+    }, [props.disabled]);
+    
 	return (
 		<div>
 			<Form ref={ref} layout="vertical">
@@ -44,7 +48,9 @@ const UserForm = (props, ref) => {
 					name="region"
 					label="区域"
 					rules={
-						isDisable? []: [
+						isDisable
+							? []
+							: [
 									{
 										required: true,
 										message: "请选择角色!",

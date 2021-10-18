@@ -4,31 +4,21 @@ import "./SideMenu.css";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 import { withRouter } from "react-router-dom";
-import {
-	UserOutlined,
-	VideoCameraOutlined,
-	UploadOutlined,
-	TeamOutlined,
-} from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 function SideMenu(props) {
 	const [menu, setMenu] = useState([]);
 	// const [selectKeys, setSelectKeys] = useState([]);
 	// const [openKeys, setOpenKeys] = useState([]);
-	const selectKeys = [props.location.pathname];//选中地址
-	const openKeys = ['/'+props.location.pathname.split('/')[1]]
+	const { role: { rights } } = JSON.parse(localStorage.getItem("token")); //当前用户的路有权限
+	const selectKeys = [props.location.pathname]; //选中地址
+	const openKeys = ["/" + props.location.pathname.split("/")[1]];
 	useEffect(() => {
 		axios.get("http://localhost:8000/rights?_embed=children").then((res) => {
 			let menuArr = [...res.data];
 			setMenu(menuArr);
 		});
 	}, []);
-
-	// useEffect(()=>{
-	// 	setSelectKeys([props.location.pathname]);
-	// 	setOpenKeys(['/'+props.location.pathname.split('/')[1]])
-
-	// },[props.location.pathname])
 
 	const iconList = {
 		"/home": <UserOutlined />,
@@ -66,7 +56,7 @@ function SideMenu(props) {
 	};
 
 	const checkPagePermission = (item) => {
-		return item.pagepermisson === 1;
+		return item.pagepermisson === 1 && rights.includes(item.key);//路由是否配置权限并且当前用户存在该路由权限
 	};
 
 	return (
@@ -74,7 +64,12 @@ function SideMenu(props) {
 			<div style={{ display: "flex", height: "100%", flexDirection: "column" }}>
 				<div className="logo">全球新闻发布管理系统</div>
 				<div style={{ flex: 1, overflow: "auto" }}>
-					<Menu theme="dark" mode="inline" selectedKeys={selectKeys} defaultOpenKeys={openKeys}>
+					<Menu
+						theme="dark"
+						mode="inline"
+						selectedKeys={selectKeys}
+						defaultOpenKeys={openKeys}
+					>
 						{renderMenu(menu)}
 					</Menu>
 				</div>
