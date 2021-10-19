@@ -102,7 +102,7 @@ export default function RoleList() {
 
 	useEffect(() => {//拿到所有权限树结构
 		axios.get("http://localhost:8000/rights?_embed=children").then((res) => {
-			console.log(res.data);
+			// console.log(res.data);
 			setRightList([...res.data]);
 		});
 	}, []);
