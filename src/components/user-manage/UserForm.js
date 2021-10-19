@@ -3,7 +3,12 @@ import { Form, Input, Select } from "antd";
 const { Option } = Select;
 const UserForm = (props, ref) => {
 	const [isDisable, setIsDisable] = useState(false);
-
+    const { roleId, region } = JSON.parse(localStorage.getItem('token'));//当前登录用户信息
+    const roleObj = {
+        '1': 'superadmin',
+        '2': 'admin',
+        '3': 'editor'
+    }
 	const changeData = (value) => {
 		if (value === 1) {
 			ref.current.setFieldsValue({
@@ -13,6 +18,37 @@ const UserForm = (props, ref) => {
 		setIsDisable(value === 1);
 	};
 
+    const checkReginDisabled = (row) => {
+        if(props.isUpdate) {//更新状态
+            if(roleObj[roleId] === 'superadmin') {
+                return false
+            }else {
+                return true
+            }
+        }else{//添加状态
+            if(roleObj[roleId] === 'superadmin') {
+                return false
+            }else {
+                return row.value !== region
+            }
+        }
+    }
+
+    const checkRoleDisabled = (row) => {
+        if(props.isUpdate) {//更新状态
+            if(roleObj[roleId] === 'superadmin') {
+                return false
+            }else {
+                return true
+            }
+        }else{//添加状态
+            if(roleObj[roleId] === 'superadmin') {
+                return false
+            }else {
+                return roleObj[row.id] !== 'editor'
+            }
+        }
+    }
 	useEffect(() => {
 			setIsDisable(props.disabled);
     }, [props.disabled]);
@@ -58,10 +94,10 @@ const UserForm = (props, ref) => {
 							  ]
 					}
 				>
-					<Select placeholder="请选择区域" disabled={isDisable}>
+					<Select placeholder="请选择区域" disabled={isDisable} >
 						{props.regions?.map((e) => {
 							return (
-								<Option key={e.id} value={e.value}>
+								<Option key={e.id} value={e.value} disabled={checkReginDisabled(e)}>
 									{e.title}
 								</Option>
 							);
@@ -86,7 +122,7 @@ const UserForm = (props, ref) => {
 					>
 						{props.roleList?.map((e) => {
 							return (
-								<Option key={e.id} value={e.roleType}>
+								<Option key={e.id} value={e.roleType} disabled={checkRoleDisabled(e)}>
 									{e.roleName}
 								</Option>
 							);

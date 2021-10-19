@@ -18,6 +18,9 @@ export default function UserList() {
 	const addForm = useRef(null);
 	const updateForm = useRef(null);
 	const [current, setCurrent] = useState({});
+
+	const { roleId, region , username } = JSON.parse(localStorage.getItem('token'));//当前登录用户信息
+
 	const columns = [
 		{
 			title: "区域",
@@ -185,12 +188,22 @@ export default function UserList() {
 		axios.delete(`http://localhost:8000/users/${row.id}`);
 	};
 
-	useEffect(() => {
+	useEffect(() => {//初始化查询
+		const roleObj = {
+			'1': 'superadmin',
+			'2': 'admin',
+			'3': 'editor'
+		}
 		axios.get("http://localhost:8000/users?_expand=role").then((res) => {
 			console.log(res.data);
-			setDataSource([...res.data]);
+			const list = [...res.data];
+
+			setDataSource(roleObj[roleId] === 'superadmin' ? list : [
+				...list.filter(item=>item.username===username),//本身
+				...list.filter(item=>item.region===region && roleObj[item.roleId] === 'editor'),//地区加可编辑
+			]);
 		});
-	}, []);
+	}, [roleId ,region, username ]);
 
 	useEffect(() => {
 		axios.get("http://localhost:8000/regions").then((res) => {
@@ -206,7 +219,9 @@ export default function UserList() {
 
 	return (
 		<div>
-			<Button type="primary" onClick={() => setIsAddVisible(true)}>
+			<Button type="primary" onClick={() => {
+				setIsAddVisible(true);
+				}}>
 				添加用户
 			</Button>
 			<Table
@@ -245,6 +260,7 @@ export default function UserList() {
 					roleList={roleList}
 					regions={regions}
 					disabled={isUpdateDisabled}
+					isUpdate={true}
 				></UserForm>
 			</Modal>
 		</div>

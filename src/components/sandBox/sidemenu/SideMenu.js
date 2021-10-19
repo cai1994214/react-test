@@ -8,8 +8,6 @@ import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 function SideMenu(props) {
 	const [menu, setMenu] = useState([]);
-	// const [selectKeys, setSelectKeys] = useState([]);
-	// const [openKeys, setOpenKeys] = useState([]);
 	const { role: { rights } } = JSON.parse(localStorage.getItem("token")); //当前用户的路有权限
 	const selectKeys = [props.location.pathname]; //选中地址
 	const openKeys = ["/" + props.location.pathname.split("/")[1]];
