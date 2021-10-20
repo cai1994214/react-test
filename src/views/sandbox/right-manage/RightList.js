@@ -11,7 +11,7 @@ export default function RightList() {
 	const [dataSource, setDataSource] = useState([]);
 
 	useEffect(() => {
-		axios.get("http://localhost:8000/rights?_embed=children").then((res) => {
+		axios.get("/rights?_embed=children").then((res) => {
 			let arr = setChildrenNull(res.data); //将children为空的置为null
 			setDataSource(arr);
 		});
@@ -47,14 +47,14 @@ export default function RightList() {
 		if (row.grade === 1) {
 			//如果删除的是第一层
 			setDataSource(dataSource.filter((item) => item.id !== row.id));
-			axios.delete(`http://localhost:8000/rights/${row.id}`);
+			axios.delete(`/rights/${row.id}`);
 		} else {
 			let data = dataSource.filter((item) => item.id === row.rightId);
 			data[0].children = data[0].children.filter(
 				(child) => child.id !== row.id
 			); //赋值改变dataSource
 			setDataSource([...dataSource]);
-			axios.delete(`http://localhost:8000/children/${row.id}`);
+			axios.delete(`/children/${row.id}`);
 		}
 	};
 
@@ -64,11 +64,11 @@ export default function RightList() {
 		// console.log(dataSource)
 		setDataSource([...dataSource]);
 		if (row.grade === 1) {
-			axios.patch(`http://localhost:8000/rights/${row.id}`, {
+			axios.patch(`/rights/${row.id}`, {
 				pagepermisson: row.pagepermisson,
 			});
 		} else {
-			axios.patch(`http://localhost:8000/children/${row.id}`, {
+			axios.patch(`/children/${row.id}`, {
 				pagepermisson: row.pagepermisson,
 			});
 		}

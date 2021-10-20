@@ -12,7 +12,7 @@ function SideMenu(props) {
 	const selectKeys = [props.location.pathname]; //选中地址
 	const openKeys = ["/" + props.location.pathname.split("/")[1]];
 	useEffect(() => {
-		axios.get("http://localhost:8000/rights?_embed=children").then((res) => {
+		axios.get("/rights?_embed=children").then((res) => {
 			let menuArr = [...res.data];
 			setMenu(menuArr);
 		});

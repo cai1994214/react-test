@@ -90,7 +90,7 @@ export default function UserList() {
 	const handleChange = (item) => {
 		item.roleState = !item.roleState;
 		setDataSource([...dataSource]);
-		axios.patch(`http://localhost:8000/users/${item.id}`, {
+		axios.patch(`/users/${item.id}`, {
 			roleState: item.roleState,
 		});
 	};
@@ -116,7 +116,7 @@ export default function UserList() {
 			.validateFields()
 			.then((values) => {
 				axios
-					.patch(`http://localhost:8000/users/${current.id}`, {
+					.patch(`/users/${current.id}`, {
 						...values,
 					})
 					.then((res) => {
@@ -148,7 +148,7 @@ export default function UserList() {
 			.validateFields()
 			.then((values) => {
 				axios
-					.post("http://localhost:8000/users", {
+					.post("/users", {
 						...values,
 						roleState: true,
 						default: false,
@@ -185,7 +185,7 @@ export default function UserList() {
 
 	const deleteMethod = (row) => {
 		setDataSource(dataSource.filter((item) => item.id !== row.id));
-		axios.delete(`http://localhost:8000/users/${row.id}`);
+		axios.delete(`/users/${row.id}`);
 	};
 
 	useEffect(() => {//初始化查询
@@ -194,7 +194,7 @@ export default function UserList() {
 			'2': 'admin',
 			'3': 'editor'
 		}
-		axios.get("http://localhost:8000/users?_expand=role").then((res) => {
+		axios.get("/users?_expand=role").then((res) => {
 			console.log(res.data);
 			const list = [...res.data];
 
@@ -206,13 +206,13 @@ export default function UserList() {
 	}, [roleId ,region, username ]);
 
 	useEffect(() => {
-		axios.get("http://localhost:8000/regions").then((res) => {
+		axios.get("/regions").then((res) => {
 			setRegions([...res.data]);
 		});
 	}, []);
 
 	useEffect(() => {
-		axios.get("http://localhost:8000/roles").then((res) => {
+		axios.get("/roles").then((res) => {
 			setRoleList([...res.data]);
 		});
 	}, []);

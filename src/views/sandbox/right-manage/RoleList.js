@@ -64,7 +64,7 @@ export default function RoleList() {
 
 	const deleteMethod = (row) => {
 		setDataSource(dataSource.filter((item) => item.id !== row.id));
-		axios.delete(`http://localhost:8000/roles/${row.id}`);
+		axios.delete(`/roles/${row.id}`);
 	};
 
 	const handleOk = () => {
@@ -78,7 +78,7 @@ export default function RoleList() {
             }
             return item
         }))
-        axios.patch(`http://localhost:8000/roles/${currentId}`,{
+        axios.patch(`/roles/${currentId}`,{
             rights: currentRights
         }).then(res=>{
             setIsModalVisible(false);
@@ -94,14 +94,14 @@ export default function RoleList() {
         setCurrentRights(val.checked);
     }
 	useEffect(() => {//获取权限列表
-		axios.get("http://localhost:8000/roles").then((res) => {
+		axios.get("/roles").then((res) => {
 			refSource.current = [...res.data];
 			setDataSource(refSource.current);
 		});
 	}, []);
 
 	useEffect(() => {//拿到所有权限树结构
-		axios.get("http://localhost:8000/rights?_embed=children").then((res) => {
+		axios.get("/rights?_embed=children").then((res) => {
 			// console.log(res.data);
 			setRightList([...res.data]);
 		});

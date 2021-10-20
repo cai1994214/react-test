@@ -14,7 +14,6 @@ import Unpublished from "../publish-manage/Unpublished";
 import Published from "../publish-manage/Published";
 import Sunset from "../publish-manage/Sunset";
 import axios from "axios";
-import { checkPropTypes } from "prop-types";
 
 const localRouterList = {
   "/home": Home,
@@ -38,8 +37,8 @@ export default function NewsRouter() {
 
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8000/rights"),
-      axios.get("http://localhost:8000/children"),
+      axios.get("/rights"),
+      axios.get("/children"),
     ]).then((res) => {
       setBackRouterList([...res[0].data, ...res[1].data]);
       console.log([...res[0].data, ...res[1].data]);
