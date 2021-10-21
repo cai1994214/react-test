@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import { PageHeader, Steps, Button, message, Form, Input, Select } from "antd";
+import { PageHeader, Steps, Button, message, Form, Input, Select, notification } from "antd";
 import style from "./News.module.css";
 import axios from "axios";
-import NewsEditor from './NewsEditor'
+import NewsEditor from './NewsEditor';
+import { withRouter } from "react-router-dom";
 const { Step } = Steps;
 const { Option } = Select;
-export default function NewsAdd() {
+function NewsAdd(props) {
 	const [current, setCurrent] = useState(0);
     const [optionList, setOptionList] = useState([]);
     const [formInfo, setFormInfo] = useState({});
     const [content, setContent] = useState("");
+    const User = JSON.parse(localStorage.getItem('token'));
 	const NewsForm = useRef(null);
 
 	const [steps, setSteps] = useState([
@@ -27,7 +29,7 @@ export default function NewsAdd() {
 		ref: NewsForm,
 	};
 
-	const next = () => {
+	const next = () => {//下一页
 		if (current === 0) {
 			NewsForm.current.validateFields().then((res) => {
 					//验证通过才能跳转
@@ -38,10 +40,40 @@ export default function NewsAdd() {
 					console.log(err);
 				});
 		}else{
-            console.log(formInfo,content)
-            setCurrent(current + 1);
+            if(content === "" || content.trim()=== "<p></p>"){//富文本内容
+                message.error('输入的内容不能为空')
+            }else{
+                setCurrent(current + 1);
+            }
+            
         }
-	};
+    };
+    
+    const handleSave = (auditState) => {
+        let { region, username, roleId } = User;
+        axios.post('/news',{//新增新闻数据
+            ...formInfo,
+            content: content,
+            region: region ? region : '全球',
+            author: username,
+            roleId: roleId,
+            auditState: auditState,//是否是保存0 提交时1
+            publishState: 0,
+            createTime: Date.now(),
+            star: 0,
+            view: 0,
+            // publishTime: 0,
+        }).then(res=>{
+            //如果是提交成功就在审核列表 保存就去草稿箱
+            props.history.push(auditState === 0 ? '/news-manage/draft' : '/audit-manage/list');
+            notification.info({
+                message: '通知',
+                description: `您可以到${auditState === 0 ? '草稿箱': '审核列表'}查看您的新闻!`,
+                placement:'bottomRight'
+            })
+        })
+    };
+
 	const prev = () => {
 		setCurrent(current - 1);
 	};
@@ -78,13 +110,13 @@ export default function NewsAdd() {
 						</Form.Item>
 						<Form.Item
 							label="新闻分类"
-							name="category"
+							name="categoryId"
 							rules={[{ required: true, message: "请输入新闻分类!" }]}
 						>
 							<Select placeholder="请输入新闻分类" allowClear>
 								{optionList?.map((item) => {
 									return (
-										<Option value={item.value} key={item.id}>
+										<Option value={item.id} key={item.id}>
 											{item.title}
 										</Option>
 									);
@@ -107,11 +139,11 @@ export default function NewsAdd() {
 					<span>
 						<Button
 							type="primary"
-							onClick={() => message.success("Processing complete!")}
+							onClick={()=>handleSave(0)}
 						>
 							保存草稿
 						</Button>
-						<Button danger>提交审核</Button>
+						<Button danger onClick={()=>handleSave(1)}>提交审核</Button>
 					</span>
 				)}
 
@@ -124,3 +156,5 @@ export default function NewsAdd() {
 		</div>
 	);
 }
+
+export default withRouter(NewsAdd)

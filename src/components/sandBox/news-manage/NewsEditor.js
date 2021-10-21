@@ -18,7 +18,6 @@ export default function NewsEditor(props) {
                     props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
                 }
 			/>
-			;
 		</div>
 	);
 }

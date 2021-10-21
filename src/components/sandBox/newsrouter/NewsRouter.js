@@ -41,7 +41,6 @@ export default function NewsRouter() {
       axios.get("/children"),
     ]).then((res) => {
       setBackRouterList([...res[0].data, ...res[1].data]);
-      console.log([...res[0].data, ...res[1].data]);
     });
   }, []);
 
