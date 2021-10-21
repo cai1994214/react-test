@@ -14,6 +14,7 @@ import Unpublished from "../publish-manage/Unpublished";
 import Published from "../publish-manage/Published";
 import Sunset from "../publish-manage/Sunset";
 import axios from "axios";
+import NewsPreview from "../news-manage/NewsPreview";
 
 const localRouterList = {
   "/home": Home,
@@ -23,6 +24,7 @@ const localRouterList = {
   "/news-manage/add": NewsAdd,
   "/news-manage/draft": NewsDraft,
   "/news-manage/category": NewsCategory,
+  "/news-manage/preview/:id": NewsPreview,
   "/audit-manage/audit": Audit,
   "/audit-manage/list": AuditList,
   "/publish-manage/unpublished": Unpublished,
@@ -45,7 +47,7 @@ export default function NewsRouter() {
   }, []);
 
   const checkRoute = (item) => {// 是否有路由权限 1为打开 0为禁用
-    return localRouterList[item.key] && item.pagepermisson;
+    return localRouterList[item.key] && (item.pagepermisson || item.routepermisson);
   };
 
   const checkoutPermission = (item) => {//当前用户的路有权限
