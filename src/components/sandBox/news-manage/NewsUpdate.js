@@ -11,7 +11,6 @@ function NewsAdd(props) {
     const [optionList, setOptionList] = useState([]);
     const [formInfo, setFormInfo] = useState({});
     const [content, setContent] = useState("");
-    const User = JSON.parse(localStorage.getItem('token'));
 	const NewsForm = useRef(null);
 
 	const [steps, setSteps] = useState([
@@ -20,7 +19,7 @@ function NewsAdd(props) {
 		{ title: "新闻内容", description: "新闻主题内容" },
 		{ title: "新闻提交", description: "保存草稿或者提交审核" },
 	]);
-
+    
 	const layout = {
 		//表单设置
 		labelCol: { span: 4 },
@@ -50,19 +49,10 @@ function NewsAdd(props) {
     };
     
     const handleSave = (auditState) => {
-        let { region, username, roleId } = User;
-        axios.post('/news',{//新增新闻数据
+        axios.patch(`/news/${props.match.params.id}`,{//新增新闻数据
             ...formInfo,
             content: content,
-            region: region ? region : '全球',
-            author: username,
-            roleId: roleId,
             auditState: auditState,//是否是保存0 提交时1
-            publishState: 0,
-            createTime: Date.now(),
-            star: 0,
-            view: 0,
-            // publishTime: 0,
         }).then(res=>{
             //如果是提交成功就在审核列表 保存就去草稿箱
             props.history.push(auditState === 0 ? '/news-manage/draft' : '/audit-manage/list');
@@ -82,13 +72,28 @@ function NewsAdd(props) {
 		axios.get("/categories").then((res) => {
 			setOptionList([...res.data]);
 		});
-	}, []);
+    }, []);
+    
+    useEffect(() => {
+		axios
+			.get(`/news/${props.match.params.id}?_expand=category&_expand=role`)
+			.then((res) => {
+                console.log(res.data);
+                let { title, categoryId, content } = res.data;
+                NewsForm.current.setFieldsValue({
+                    title,
+                    categoryId
+                })
+                setContent(content);
+               
+			});
+    }, [props.match.params.id]);
 	return (
 		<div>
 			<PageHeader
 				className="site-page-header"
-				onBack={() => null}
-				title="撰写新闻"
+				onBack={()=>props.history.goBack()}
+				title="更新新闻"
 			/>
 			<Steps current={current}>
 				{steps.map((e) => {
@@ -128,7 +133,7 @@ function NewsAdd(props) {
                 {/* 富文本编辑器 */}
 				<div className={current === 1 ? "" : style.hidden}>
                     {/* 保存富文本内容 */}
-                   <NewsEditor getContent={(res)=>{setContent(res)}} ></NewsEditor>
+                   <NewsEditor getContent={(res)=>{setContent(res)}} content={content} ></NewsEditor>
                 </div>
 				<div className={current === 2 ? "" : style.hidden}></div>
 			</div>
