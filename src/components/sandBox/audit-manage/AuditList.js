@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Table, Button, Modal, } from "antd";
+import { Table, Button, Modal, Tag, notification } from "antd";
 import axios from "axios";
-import {
-	DeleteOutlined,
-	EditOutlined,
-    ExclamationCircleOutlined,
-    UploadOutlined
-} from "@ant-design/icons";
 const { confirm } = Modal;
 export default function AuditList(props) {
     const [dataSource, setDataSource] = useState([]);
     const { username } = JSON.parse(localStorage.getItem('token'));
+    const auditStateList = ['草稿箱','审核中','已通过','未通过'];
+    const colorList = ['black', 'orange', 'green', 'red'];
 	const columns = [
 		{
 			title: "ID",
@@ -36,59 +32,37 @@ export default function AuditList(props) {
         {
 			title: "审核状态",
             dataIndex: "auditState",
-            render: (auditState) => auditState
+            render: (auditState) => <Tag color={colorList[auditState]}>{auditStateList[auditState]}</Tag>
 		},
 		{
 			title: "操作",
 			render: (row) => (
 				<div>
-					<Button
-						danger
-						shape="circle"
-						icon={<DeleteOutlined />}
-						onClick={() => confirmMethod(row)}
-					/>
-					<Button
-						shape="circle"
-						icon={<EditOutlined />}
-						onClick={() => {
-                           props.history.push(`/news-manage/update/${row.id}`)
-                        }}
-					/>
-                    <Button
-						type="primary"
-						shape="circle"
-						icon={< UploadOutlined/>}
-						onClick={() => {
-                            setIsModalVisible(true)
-                        }}
-					/>
+                    { row.auditState === 1 && <Button >撤销</Button> }
+                    { row.auditState === 2 && <Button danger onClick={() => handlePublish(row)}>发布</Button> }
+                    { row.auditState === 3 && <Button type="primary">更新</Button> }
+					
 				</div>
 			),
 		},
 	];
 
-	const confirmMethod = (row) => {
-		confirm({
-			title: "你确定要删除么?",
-			icon: <ExclamationCircleOutlined />,
-			onOk() {
-                deleteMethod(row)
-			},
-			onCancel() {
-				console.log("Cancel");
-			},
-		});
-	};
+	const handlePublish = (row) => {
+        axios.patch(`/news/${row.id}`,{
+            publishState: 2
+        }).then(res=>{
+            //如果是提交成功就在审核列表 保存就去草稿箱
+            props.history.push(`/publish-manage/published${row.id}`);
+            notification.info({
+                message: '通知',
+                description: `您可以到[发布管理/已经发布]中查看您的新闻!`,
+                placement:'bottomRight'
+            })
+        })
+    }
 
-	const deleteMethod = (row) => {
-		setDataSource(dataSource.filter((item) => item.id !== row.id));
-        axios.delete(`/news/${row.id}`);
-	};
-
-	useEffect(() => {//拿到所有权限树结构
-		axios.get(`/news?author=${username}&auditState=1&_expand=category`).then((res) => {
-            console.log(res.data);
+	useEffect(() => {//拿到所有权限树结构 审核状态不等于0 _ne=0 只要不是草稿箱的 发布状态<=1 是_lte=1
+		axios.get(`/news?author=${username}&auditState_ne=0&publishState_lte=1&_expand=category`).then((res) => {
             setDataSource([...res.data]);
 		});
 	}, []);

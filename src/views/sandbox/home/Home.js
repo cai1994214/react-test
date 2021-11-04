@@ -10,10 +10,14 @@ export default function Home() {
         // });
 
 
-        //json server 新增
-        // axios.post('/posts', {
-        //     title: '新增的数据2313',
-        //     author: 'wangyang5454'
+        // json server 新增
+        // axios.post('/users', {
+        //     "username": "admin213123123",
+        //     "password": 123456,
+        //     "roleState": true,
+        //     "default": true,
+        //     "region": "",
+        //     "roleId": 1
         // }).then(res => {
         //     console.log(res.data)
         // });

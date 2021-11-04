@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { PageHeader, Button, Descriptions } from "antd";
 import moment from "moment";
 import axios from "axios";
-import style from './News.module.css'
+import style from "./News.module.css";
 
 export default function NewsPreview(props) {
 	const [newsInfo, setNewsInfo] = useState(null);
-
+	const colorList = ["black", "orange", "green", "red"];
 	useEffect(() => {
 		axios
 			.get(`/news/${props.match.params.id}?_expand=category&_expand=role`)
 			.then((res) => {
-				console.log(res.data);
 				setNewsInfo(res.data);
 			});
 	}, [props.match.params.id]);
@@ -43,16 +42,14 @@ export default function NewsPreview(props) {
 								{newsInfo.region}
 							</Descriptions.Item>
 							<Descriptions.Item label="审核状态">
-								{" "}
-								<span style={{ color: "red" }}>
+								<span style={{ color: colorList[newsInfo.auditState] }}>
 									{auditList[newsInfo.auditState]}
-								</span>{" "}
+								</span>
 							</Descriptions.Item>
 							<Descriptions.Item label="发布状态">
-								{" "}
-								<span style={{ color: "red" }}>
+								<span style={{ color: colorList[newsInfo.publishState] }}>
 									{publishList[newsInfo.publishState]}
-								</span>{" "}
+								</span>
 							</Descriptions.Item>
 							<Descriptions.Item label="访问数量">
 								<span style={{ color: "green" }}>{newsInfo.view}</span>
@@ -63,10 +60,12 @@ export default function NewsPreview(props) {
 							<Descriptions.Item label="评论数量">{0}</Descriptions.Item>
 						</Descriptions>
 					</PageHeader>
-					<div className={style.content} dangerouslySetInnerHTML={{
-                        __html: newsInfo.content
-                    }}>
-                    </div>
+					<div
+						className={style.content}
+						dangerouslySetInnerHTML={{
+							__html: newsInfo.content,
+						}}
+					></div>
 				</div>
 			)}
 		</div>

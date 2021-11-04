@@ -78,7 +78,6 @@ function NewsAdd(props) {
 		axios
 			.get(`/news/${props.match.params.id}?_expand=category&_expand=role`)
 			.then((res) => {
-                console.log(res.data);
                 let { title, categoryId, content } = res.data;
                 NewsForm.current.setFieldsValue({
                     title,
