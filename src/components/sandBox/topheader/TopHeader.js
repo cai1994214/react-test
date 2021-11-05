@@ -34,7 +34,7 @@ function TopHeader(props) {
 				{collapsed ? (
 					<MenuUnfoldOutlined onClick={toggle} />
 				) : (
-					<MenuFoldOutlined onClick={toggle} />
+					<MenuFoldOutlined onClick={toggle}/>
 				)}
 				<div style={{ float: "right" }}>
 					<span>欢迎<span style={{color: '#1890ff'}}>{username}</span>回来</span>

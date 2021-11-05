@@ -38,9 +38,9 @@ export default function AuditList(props) {
 			title: "操作",
 			render: (row) => (
 				<div>
-                    { row.auditState === 1 && <Button >撤销</Button> }
+                    { row.auditState === 1 && <Button onClick={()=>handleRevert(row)}>撤销</Button> }
                     { row.auditState === 2 && <Button danger onClick={() => handlePublish(row)}>发布</Button> }
-                    { row.auditState === 3 && <Button type="primary">更新</Button> }
+                    { row.auditState === 3 && <Button onClick={()=>handleUpdate(row)} type="primary">更新</Button> }
 					
 				</div>
 			),
@@ -48,17 +48,36 @@ export default function AuditList(props) {
 	];
 
 	const handlePublish = (row) => {
+        setDataSource(dataSource.filter(item => item.id !== row.id));
         axios.patch(`/news/${row.id}`,{
-            publishState: 2
+            publishState: 2,
+            publishTime: new Date().getTime()
         }).then(res=>{
             //如果是提交成功就在审核列表 保存就去草稿箱
-            props.history.push(`/publish-manage/published${row.id}`);
+            props.history.push(`/publish-manage/published`)
             notification.info({
                 message: '通知',
-                description: `您可以到[发布管理/已经发布]中查看您的新闻!`,
+                description: `您可以到[发布管理/已发布]中查看您的新闻!`,
                 placement:'bottomRight'
             })
         })
+    }
+
+    const handleRevert = (row) => {//撤销
+        setDataSource(dataSource.filter(item => item.id !== row.id));
+        axios.patch(`/news/${row.id}`,{
+            auditState: 0
+        }).then(res=>{
+            notification.info({
+                message: '通知',
+                description: `您可以到草稿箱中查看您的新闻!`,
+                placement:'bottomRight'
+            })
+        })
+    }
+
+    const handleUpdate = (row) => {//更新
+        props.history.push(`/news-manage/update/${row.id}`)
     }
 
 	useEffect(() => {//拿到所有权限树结构 审核状态不等于0 _ne=0 只要不是草稿箱的 发布状态<=1 是_lte=1

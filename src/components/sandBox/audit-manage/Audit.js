@@ -3,7 +3,7 @@ import React, {useState, useEffect } from 'react'
 import axios from 'axios'
 import { Table, Button, notification} from "antd";
 export default function Audit(props) {
-
+    //审理审核中的列表 
     const [dataSource, setDataSource] = useState([]);
     const { roleId, region , username } = JSON.parse(localStorage.getItem('token'));//当前登录用户信息
    
@@ -59,10 +59,10 @@ export default function Audit(props) {
             publishState
         }).then(res=>{
             notification.info({
-            message: '通知',
-            description: `您可以到[审核管理/审核列表]查看您的审核状态!`,
-            placement:'bottomRight'
-        })
+                message: '通知',
+                description: `您可以到${auditState == 3 ? '[审核管理/审核列表]' : '[发布管理/待发布]'}查看您的审核状态!`,
+                placement:'bottomRight'
+            })
         })
     }   
 
