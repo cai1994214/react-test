@@ -4,8 +4,10 @@ import "./SideMenu.css";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 import { withRouter } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined ,ClusterOutlined, LineChartOutlined, HighlightOutlined, SafetyOutlined, ReadOutlined, NotificationOutlined } from "@ant-design/icons";
+import { connect } from 'react-redux'
 import axios from "axios";
+
 function SideMenu(props) {
 	const [menu, setMenu] = useState([]);
 	const { role: { rights } } = JSON.parse(localStorage.getItem("token")); //当前用户的路有权限
@@ -19,12 +21,12 @@ function SideMenu(props) {
 	}, []);
 
 	const iconList = {
-		"/home": <UserOutlined />,
+		"/home": <LineChartOutlined />,
 		"/user-manage": <UserOutlined />,
-		"/right-manage": <UserOutlined />,
-		"/news-manage": <UserOutlined />,
-		"/audit-manage": <UserOutlined />,
-		"/publish-manage": <UserOutlined />,
+		"/right-manage": <HighlightOutlined />,
+		"/news-manage": <SafetyOutlined />,
+		"/audit-manage": <ReadOutlined />,
+		"/publish-manage": <NotificationOutlined />,
 		"/user-manage/add": <UserOutlined />,
 		"/user-manage/delete": <UserOutlined />,
 	};
@@ -58,9 +60,16 @@ function SideMenu(props) {
 	};
 
 	return (
-		<Sider trigger={null} collapsible collapsed={false}>
+		<Sider trigger={null} collapsible collapsed={props.isCollapsed}>
 			<div style={{ display: "flex", height: "100%", flexDirection: "column" }}>
-				<div className="logo">全球新闻发布管理系统</div>
+				{
+					props.isCollapsed ? (
+						<div className="logos"><ClusterOutlined /></div>
+					) : (
+						<div className="logo">全球新闻发布管理系统</div>
+					)
+				}
+				
 				<div style={{ flex: 1, overflow: "auto" }}>
 					<Menu
 						theme="dark"
@@ -76,4 +85,6 @@ function SideMenu(props) {
 	);
 }
 
-export default withRouter(SideMenu);
+const mapStateToProps = ({ CollApsedReducer:{isCollapsed}}) => ({ isCollapsed });//解构出来isCollapsed
+
+export default connect(mapStateToProps)(withRouter(SideMenu));

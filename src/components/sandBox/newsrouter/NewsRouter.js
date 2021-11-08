@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Spin } from 'antd';
 import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "../../../views/sandbox/home/Home";
 import UserList from "../../../views/sandbox/user-manage/UserList";
@@ -16,6 +17,7 @@ import Sunset from "../publish-manage/Sunset";
 import axios from "axios";
 import NewsPreview from "../news-manage/NewsPreview";
 import NewsUpdate from "../news-manage/NewsUpdate";
+import { connect } from 'react-redux'
 
 const localRouterList = {
   "/home": Home,
@@ -34,7 +36,7 @@ const localRouterList = {
   "/publish-manage/sunset": Sunset,
 };
 
-export default function NewsRouter() {
+function NewsRouter(props) {
   const [BackRouteList, setBackRouterList] = useState([]);
   const { role:{ rights } } = JSON.parse(localStorage.getItem('token'));
 
@@ -57,27 +59,45 @@ export default function NewsRouter() {
   };
   return (
     <div>
-      <Switch>
-        {BackRouteList.map((item) => {
-          if (checkRoute(item) && checkoutPermission(item)) {
-            //判断是否有权限
-            return (
-              <Route
-                path={item.key}
-                component={localRouterList[item.key]}
-                key={item.id}
-                exact
-              ></Route>
-            );
-          }
-          return null
-        })}
-        {/* Redirect 重定向  exact精确匹配 *404和重定向搭配使用 */}
-        <Redirect from="/" to="/home" exact></Redirect>
-        {BackRouteList.length > 0 && (
-          <Route path="*" component={NoPermission}></Route>
-        )}
-      </Switch>
+      <Spin size="large" spinning={props.loadingState}> 
+        <Switch>
+          {BackRouteList.map((item) => {
+            if (checkRoute(item) && checkoutPermission(item)) {
+              //判断是否有权限
+              return (
+                <Route
+                  path={item.key}
+                  component={localRouterList[item.key]}
+                  key={item.id}
+                  exact
+                ></Route>
+              );
+            }
+            return null
+          })}
+          {/* Redirect 重定向  exact精确匹配 *404和重定向搭配使用 */}
+          <Redirect from="/" to="/home" exact></Redirect>
+          {BackRouteList.length > 0 && (
+            <Route path="*" component={NoPermission}></Route>
+          )}
+        </Switch>
+      </Spin>
     </div>
   );
 }
+
+const mapStateToProps = (state) => {//创建一个对象
+	return {
+		loadingState: state.LoadingReducer.loadingState
+	}
+}
+
+const mapDispatchToProps = {
+	changLoading() {
+		return {
+			type: "change_loading",
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsRouter)

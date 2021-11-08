@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout, Dropdown, Menu, Avatar } from "antd";
+import { connect } from 'react-redux'
 const { Header } = Layout;
 import {
 	MenuUnfoldOutlined,
@@ -8,12 +9,12 @@ import {
 } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 function TopHeader(props) {
-	const [collapsed, setCollapsed] = useState(false);
 
 	const {role:{roleName}, username} = JSON.parse(localStorage.getItem('token'));
 	
 	function toggle() {
-		setCollapsed(!collapsed);
+		//改变state的isCollapsed的状态
+		props.changCollapsed();//自动父组件dispatch 这个action
 	}
 	
 	const menu = (
@@ -31,7 +32,7 @@ function TopHeader(props) {
 	return (
 		<div>
 			<Header className="site-layout-background">
-				{collapsed ? (
+				{props.isCollapsed ? (
 					<MenuUnfoldOutlined onClick={toggle} />
 				) : (
 					<MenuFoldOutlined onClick={toggle}/>
@@ -46,5 +47,22 @@ function TopHeader(props) {
 		</div>
 	);
 }
+//  connect的用法 connect(
+	//mapStateToProps
+	//mapDispatchToProps
+//  )(被包装的组件)
 
-export default withRouter(TopHeader)
+const mapStateToProps = (state) => {//创建一个对象
+	return {
+		isCollapsed: state.CollApsedReducer.isCollapsed
+	}
+}
+
+const mapDispatchToProps = {
+	changCollapsed() {
+		return {
+			type: "change_collapsed",
+		}
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(TopHeader))

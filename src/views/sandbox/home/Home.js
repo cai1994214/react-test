@@ -1,59 +1,71 @@
-import React from 'react'
-import { Button } from 'antd';
-import axios from 'axios'
+import React,{ useEffect, useState } from "react";
+import { Card, Col, Row, List, Avatar } from "antd";
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import axios from "axios";
+const { Meta } = Card;
 export default function Home() {
+    const [viewsData, setViewsData] = useState([]);
+    const [starsData, setStarsData] = useState([]);
+    const { role:{roleName}, region , username } = JSON.parse(localStorage.getItem('token'));//当前登录用户信息
+    useEffect(()=>{
+        //查询浏览最多的 desc倒序
+        axios.get(`news?publishState=2&_expand=category&_sort=view&_order=desc&_limit=6`).then(res=>{
+            setViewsData([...res.data])
+        })
+    },[])
 
-    const editInfo = () => {
-        //json server 查询
-        // axios.get('/posts?id=2').then(res => {
-        //     console.log(res.data)
-        // });
+    useEffect(() => {
+        axios.get(`news?publishState=2&_expand=category&_sort=star&_order=desc&_limit=6`).then(res=>{
+            setStarsData([...res.data])
+        })
+    }, [])
 
-
-        // json server 新增
-        // axios.post('/users', {
-        //     "username": "admin213123123",
-        //     "password": 123456,
-        //     "roleState": true,
-        //     "default": true,
-        //     "region": "",
-        //     "roleId": 1
-        // }).then(res => {
-        //     console.log(res.data)
-        // });
-
-        // 修改 全部替换对象
-        // axios.put('/posts/3', {
-        //     title: '修改',
-        // }).then(res => {
-        //     console.log(res.data)
-        // });
-
-        //修改 只会修改指定的属性 局部更新
-        // axios.patch('/posts/3', {
-        //     title: '修改1',
-        // }).then(res => {
-        //     console.log(res.data)
-        // });
-
-        //删除 连带着表关联数据也删除
-        // axios.delete('/posts/2').then(res => {
-        //     console.log(res.data)
-        // })
-
-        // _embed 表关联 将post数据和comments数据 合并关联 向下关联
-        // axios.get('/posts?_embed=comments').then(res => {
-        //     console.log(res.data)
-        // })
-
-        //_expand 向上关联 注意是post不是posts 
-        // axios.get('/comments?_expand=post').then(res => {
-        //     console.log(res.data)
-        // })
-    }
-    return (
-        <div>
-            <Button type="primary" onClick={editInfo}>Button</Button>
-        </div>
-    )
+	return (
+		<div className="site-card-wrapper">
+			<Row gutter={16}>
+				<Col span={8}>
+					<Card title="用户最长浏览" bordered={true}>
+						<List
+							size="small"
+							dataSource={viewsData}
+							renderItem={(item) => <List.Item><a href={`#/news-manage/preview/${item.id}`}>{item.title}</a></List.Item>}
+						/>
+					</Card>
+				</Col>
+				<Col span={8}>
+					<Card title="用户点赞最多" bordered={true}>
+						<List
+							size="small"
+							dataSource={starsData}
+							renderItem={(item) => <List.Item> <a href={`#/news-manage/preview/${item.id}`}>{item.title}</a></List.Item>}
+						/>
+					</Card>
+				</Col>
+				<Col span={8}>
+					<Card
+						cover={
+							<img
+								alt="example"
+								src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+							/>
+						}
+						actions={[
+							<SettingOutlined key="setting" />,
+							<EditOutlined key="edit" />,
+							<EllipsisOutlined key="ellipsis" />,
+						]}
+					>
+						<Meta
+							avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+							title={username}
+							description={
+                                <div><b>{region?region:'全球'}</b><span style={{marginLeft:'30px'}}>{roleName}</span></div>
+                            }
+						/>
+					</Card>
+					,
+				</Col>
+			</Row>
+		</div>
+	);
 }
