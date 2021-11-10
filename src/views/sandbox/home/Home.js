@@ -1,9 +1,10 @@
 import React,{ useEffect, useState } from "react";
-import { Card, Col, Row, List, Avatar } from "antd";
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, Col, Row, List, Avatar, Button } from "antd";
+import { EditOutlined, EllipsisOutlined, SettingOutlined, IssuesCloseOutlined } from '@ant-design/icons';
 import axios from "axios";
+import { connect } from 'react-redux'
 const { Meta } = Card;
-export default function Home() {
+function Home(props) {
     const [viewsData, setViewsData] = useState([]);
     const [starsData, setStarsData] = useState([]);
     const { role:{roleName}, region , username } = JSON.parse(localStorage.getItem('token'));//当前登录用户信息
@@ -20,6 +21,12 @@ export default function Home() {
         })
     }, [])
 
+    const addLoading = () => {
+        props.changeLoading(true);
+        setTimeout(() => {
+            props.changeLoading(false);
+        }, 1000);
+    }
 	return (
 		<div className="site-card-wrapper">
 			<Row gutter={16}>
@@ -66,6 +73,30 @@ export default function Home() {
 					,
 				</Col>
 			</Row>
+            <div><b>初始值</b>{props.stateNum}</div>
+            <Button type="primary" shape="circle" onClick={()=>props.addNum()}>+</Button>
+            <Button danger shape="circle" onClick={()=>props.reduceNum()}>-</Button>
+            <Button danger shape="circle" onClick={()=>addLoading()}><IssuesCloseOutlined /></Button>
 		</div>
 	);
 }
+
+const mapStateToProps = (state) => {//创建一个对象
+	return {
+        stateNum: state.DemoReducer,//reducer返回的初始变量
+	}
+}
+
+const mapDispatchToProps = {
+	addNum() {
+		return { type: "addNum",}
+    },
+    reduceNum() {
+        return { type: 'reduceNum'}
+    },
+    changeLoading(res) {
+        return {type: 'change_loading', payload: res}
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
